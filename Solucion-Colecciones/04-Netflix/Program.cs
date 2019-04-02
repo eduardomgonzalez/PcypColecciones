@@ -33,22 +33,24 @@ namespace _04_Netflix
 
                     string[] cadenaFinal = sLine.Split(',');
 
-                    int peli = Convert.ToInt32(cadenaFinal[1]);
+                    int usuario = Convert.ToInt32(cadenaFinal[1]);
 
-                    if (dic.ContainsKey(peli))
+                    if (dic.ContainsKey(usuario))
                     {
-                        int valor = Convert.ToInt32(cadenaFinal[2]);
 
-                        if (dic.TryGetValue(peli, out valor))
+                        int puntajeTxt = Convert.ToInt32(cadenaFinal[2]);
+                        int puntajeDiccionario;
+
+                        if (dic.TryGetValue(usuario, out puntajeDiccionario))
                         {
-                            valor += valor;
-                            dic.Remove(peli);
-                            dic.Add(peli, valor);
+                            puntajeDiccionario += puntajeTxt;
+                            dic.Remove(usuario);
+                            dic.Add(usuario, puntajeDiccionario);
                         }
                     }
                     else
                     {
-                        dic.Add(peli, Convert.ToInt32(cadenaFinal[2]));
+                        dic.Add(usuario, Convert.ToInt32(cadenaFinal[2]));
                     }
                 }
 
@@ -57,22 +59,11 @@ namespace _04_Netflix
 
             mostrarDiccionario(dic);
 
-            //Muestro el array
-            /*foreach (string line in arrText)
-            {
-                Console.WriteLine(line);
-            }*/
-
-            //Muestro determinada posicion del array
-            /* Console.Write("{0}" , arrText[5]);                
-             Console.ReadKey();*/
-
-
         }
 
         private static void mostrarDiccionario(Dictionary<int, int> diccionario)
         {
-            foreach (var entrada in diccionario)
+            foreach (var entrada in diccionario.OrderByDescending(pair => pair.Value).Take(10))//imprime los 10 primeros
             {
                 Console.WriteLine("{0} - {1}", entrada.Key, entrada.Value);
             }
