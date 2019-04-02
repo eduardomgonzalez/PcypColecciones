@@ -35,23 +35,7 @@ namespace _04_Netflix
 
                     int usuario = Convert.ToInt32(cadenaFinal[1]);
 
-                    if (dic.ContainsKey(usuario))
-                    {
-
-                        int puntajeTxt = Convert.ToInt32(cadenaFinal[2]);
-                        int puntajeDiccionario;
-
-                        if (dic.TryGetValue(usuario, out puntajeDiccionario))
-                        {
-                            puntajeDiccionario += puntajeTxt;
-                            dic.Remove(usuario);
-                            dic.Add(usuario, puntajeDiccionario);
-                        }
-                    }
-                    else
-                    {
-                        dic.Add(usuario, Convert.ToInt32(cadenaFinal[2]));
-                    }
+                    validadYCargarUsuario(usuario, cadenaFinal);
                 }
 
             }
@@ -68,6 +52,28 @@ namespace _04_Netflix
                 Console.WriteLine("{0} - {1}", entrada.Key, entrada.Value);
             }
             Console.ReadKey();
+        }
+        
+       private static void validadYCargarUsuario(int us, string[] cadena)
+        {
+            if (dic.ContainsKey(us))
+            {
+
+                int puntajeTxt = Convert.ToInt32(cadena[2]);
+                int puntajeDiccionario;
+
+                if (dic.TryGetValue(us, out puntajeDiccionario))
+                {
+                    puntajeDiccionario += puntajeTxt;
+                    dic.Remove(us);
+                    dic.Add(us, puntajeDiccionario);
+                }
+            }
+            else
+            {
+                dic.Add(us, Convert.ToInt32(cadena[2]));
+            }
+
         }
     }
 }
