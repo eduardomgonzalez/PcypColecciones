@@ -44,7 +44,7 @@ namespace _05_MultiplicacionMatrices
                 mostrarMatriz(matriz2, fila2, columna2);
 
                 mostrarMensaje("\nResultado de Multiplicación de ambas matrices: \n");
-                multiplicarMatirces(matrizResultado, matriz1, matriz2, fila1, fila2);
+                multiplicarMatirces(matrizResultado, matriz1, matriz2, fila1, columna2, columna1);
                 mostrarMatriz(matrizResultado, fila1, columna2);
             }
             else
@@ -56,18 +56,18 @@ namespace _05_MultiplicacionMatrices
 
         }
 
-        private static void multiplicarMatirces(int[,] mat, int[,] mat1, int[,] mat2, int fila, int columna) //HACER ESTO
+        private static void multiplicarMatirces(int[,] mat, int[,] mat1, int[,] mat2, int fila, int columna, int col)
         {
             for (int i = 0; i < fila; i++)
             {
-                for (int j = 0; j < fila; j++)
+                for (int j = 0; j < columna; j++)
                 {
-                    int suma = 0;
-                    for (int k = 0; k < columna; k++)
+                    
+                    for (int k = 0; k < col; k++)
                     {                        
-                        suma += mat1[i, k] * mat2[k, j];
+                        mat[i, j] += mat1[i, k] * mat2[k, j];
                     }
-                    mat[i, j] = suma;
+                    
                 }
             }
         }
