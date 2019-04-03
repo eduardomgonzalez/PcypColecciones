@@ -38,9 +38,9 @@ namespace _05_MultiplicacionMatrices
             {
                 cargarMatriz(matriz1, fila1, columna1);
                 cargarMatriz(matriz2, fila2, columna2);
-                mostrarMensaje("Primera Matriz:\n");
+                mostrarMensaje("\nPrimera Matriz:\n");
                 mostrarMatriz(matriz1, fila1, columna1);
-                mostrarMensaje("Segunda Matriz:\n");
+                mostrarMensaje("\nSegunda Matriz:\n");
                 mostrarMatriz(matriz2, fila2, columna2);
 
                 mostrarMensaje("\nResultado de Multiplicación de ambas matrices: \n");
