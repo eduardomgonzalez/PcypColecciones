@@ -17,10 +17,6 @@ namespace _05_MultiplicacionMatrices
 
             mostrarMensaje("Multiplicar dos matrices\n");
 
-            //carga dimension de matrices
-            /*cargarDimensionMatriz(fila1, columna1);
-            cargarDimensionMatriz(fila2, columna2);*/
-
             mostrarMensaje("Ingrese la cantidad de filas para la matriz 1: ");
             fila1 = Int32.Parse(Console.ReadLine());
             mostrarMensaje("Ingrese la cantidad de columnas para la matriz 1: ");
@@ -35,6 +31,7 @@ namespace _05_MultiplicacionMatrices
 
             int[,] matriz1 = new int[fila1, columna1];
             int[,] matriz2 = new int[fila2, columna2];
+            int[,] matrizResultado = new int[fila1, columna2];
 
 
             if (columna1 == fila2) //Validacion para saber si se pueden multiplicar las matrices
@@ -47,7 +44,8 @@ namespace _05_MultiplicacionMatrices
                 mostrarMatriz(matriz2, fila2, columna2);
 
                 mostrarMensaje("\nResultado de Multiplicación de ambas matrices: \n");
-                multiplicarMatirces(matriz1, matriz2);
+                multiplicarMatirces(matrizResultado, matriz1, matriz2, fila1, fila2);
+                mostrarMatriz(matrizResultado, fila1, columna2);
             }
             else
             {
@@ -58,10 +56,20 @@ namespace _05_MultiplicacionMatrices
 
         }
 
-        private static void multiplicarMatirces(int[,] matriz1, int[,] matriz2)
+        private static void multiplicarMatirces(int[,] mat, int[,] mat1, int[,] mat2, int fila, int columna) //HACER ESTO
         {
-            Console.WriteLine("hacer multiplicacion (TERMINAR)");
-            Console.ReadKey();
+            for (int i = 0; i < fila; i++)
+            {
+                for (int j = 0; j < fila; j++)
+                {
+                    int suma = 0;
+                    for (int k = 0; k < columna; k++)
+                    {                        
+                        suma += mat1[i, k] * mat2[k, j];
+                    }
+                    mat[i, j] = suma;
+                }
+            }
         }
 
         private static void mostrarMatriz(int[,] matriz, int f, int c)
