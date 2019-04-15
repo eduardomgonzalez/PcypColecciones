@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04-Netflix", "04-Netflix\04
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05-MultiplicacionMatrices", "05-MultiplicacionMatrices\05-MultiplicacionMatrices.csproj", "{FB77136E-22A8-40D5-A1F9-3D3DB789922F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06-Abecedario", "06-Abecedario\06-Abecedario.csproj", "{73079A19-366E-4C57-9480-066B07FCC3ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FB77136E-22A8-40D5-A1F9-3D3DB789922F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB77136E-22A8-40D5-A1F9-3D3DB789922F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB77136E-22A8-40D5-A1F9-3D3DB789922F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73079A19-366E-4C57-9480-066B07FCC3ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73079A19-366E-4C57-9480-066B07FCC3ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73079A19-366E-4C57-9480-066B07FCC3ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73079A19-366E-4C57-9480-066B07FCC3ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
