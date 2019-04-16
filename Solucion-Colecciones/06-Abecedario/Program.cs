@@ -10,54 +10,47 @@ namespace _06_Abecedario
     {
         static void Main(string[] args)
         {
-
-            //List<string> lista = new List<string>();
+            byte letraInicial = 65;
+            byte letraFinal = 91;
 
             Task t1 = new Task( () =>
             {
-                for (byte a = 65; a < 91; a++)
+                while(letraInicial < letraFinal)
                 {
-                    if (!esPar(a))
+                    if (!esPar(letraInicial))
                     {
-                        Console.WriteLine("Tarea 1: " + (char)a);
-                        //lista.Add("Tarea 1: " + (char)a);
+                        mostrarMensaje("Tarea 1: " + (char)letraInicial);
+                        letraInicial++;
                     }
-                    
                 }
             });
 
             Task t2 = new Task(() =>
             {
-                for (byte a = 65; a < 91; a++)
+                while (letraInicial < letraFinal)
                 {
-                    if (esPar(a))
+                    if (esPar(letraInicial))
                     {
-                        Console.WriteLine("Tarea 2: " + (char)a);
-                        //lista.Add("Tarea 2: " + (char)a);
+                        mostrarMensaje("Tarea 2: " + (char)letraInicial);
+                        letraInicial++;
                     }
-                    
                 }
             });
 
-            /*
-            foreach (var element in lista)
-            {
-
-                Console.Write("{0} \n", element);
-            }
-            Console.ReadKey();
-            */
-
             t1.Start();
             t2.Start();
-
+            Task.WaitAll(t1, t2);
             Console.ReadKey();
-
         }
 
         static bool esPar(int n)
         {
             return n % 2 == 0;
+        }
+
+        static void mostrarMensaje(string msg)
+        {
+            Console.WriteLine(msg);
         }
     }
 }
