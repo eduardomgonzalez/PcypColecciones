@@ -63,7 +63,6 @@ namespace _04_Netflix
             {
                 Console.WriteLine("{0} - {1}", entrada.Key, entrada.Value);
             }
-            Console.ReadKey();
         }
         
        private static void validadYCargarUsuario(int us, string[] cadena)
