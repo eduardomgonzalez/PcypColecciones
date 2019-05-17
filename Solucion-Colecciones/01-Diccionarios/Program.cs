@@ -25,7 +25,8 @@ namespace _01_Diccionarios
 
             //b)
             string nombre;
-            if (dic.TryGetValue("Pedro", out nombre))
+
+            if (dic.TryGetValue("Mariana", out nombre))
             {
                 Console.WriteLine(nombre);
                 Console.ReadKey();

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
+using System.Diagnostics;
 
 namespace _04_Netflix
 {
@@ -22,6 +23,10 @@ namespace _04_Netflix
             StreamReader objReader = new StreamReader("c:\\ratings.txt");//Me da error cuando pongo este archivo en la solucion y lo quiero subir a GitHub
             string sLine = "";
             List<string> arrText = new List<string>();
+
+            Stopwatch tiempo = new Stopwatch();
+
+            tiempo.Start(); //inicia reloj
 
             //Lectura
             while (sLine != null)
@@ -41,7 +46,14 @@ namespace _04_Netflix
             }
             objReader.Close();
 
+            tiempo.Stop(); //finaliza reloj
+
             mostrarDiccionario(dic);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Tardó: {0} segundos", tiempo.ElapsedMilliseconds / 1000.0);
+            Console.ReadKey();
 
         }
 
@@ -57,21 +69,19 @@ namespace _04_Netflix
        private static void validadYCargarUsuario(int us, string[] cadena)
         {
             if (dic.ContainsKey(us))
-            {
-
-                int puntajeTxt = Convert.ToInt32(cadena[2]);
+            {                
                 int puntajeDiccionario;
 
                 if (dic.TryGetValue(us, out puntajeDiccionario))
                 {
-                    puntajeDiccionario += puntajeTxt;
+                    puntajeDiccionario++;
                     dic.Remove(us);
                     dic.Add(us, puntajeDiccionario);
                 }
             }
             else
             {
-                dic.Add(us, Convert.ToInt32(cadena[2]));
+                dic.Add(us, 1);
             }
 
         }
