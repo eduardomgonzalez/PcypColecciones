@@ -1,2 +1,5 @@
 # PcypColecciones
-Ejercicios sobre colecciones de la materia Programacion Concurrente y Paralela
+Ejercicios para la materia Programacion Concurrente y Paralela.
+
+- Colecciones
+- Tareas
