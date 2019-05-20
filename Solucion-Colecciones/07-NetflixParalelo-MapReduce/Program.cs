@@ -36,15 +36,15 @@ namespace _08___Netflix_MapReduce
                     if (!ReviewsByUser.ContainsKey(userid))  // primera revisión:
                         ReviewsByUser.Add(userid, 1);
                     else  // otra revisión por el mismo usuario:
-                        ReviewsByUser[userid]++;
+                        ReviewsByUser[userid]++;           
 
                     return tls;
                 },
                 (tls) => //Finalizer
-                {
+                {                    
                     Interlocked.Add(ref count, tls);
                 }
-            );
+            );            
 
             var top10 = ReviewsByUser.OrderByDescending(x => x.Value).Take(10);
 
