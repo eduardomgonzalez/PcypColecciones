@@ -1,68 +1,117 @@
-﻿using System;
+﻿/* Program.cs */
+
+//
+// Sequential C# Version
+//
+// Sequentially processes a text file of movie reviews, one per line, 
+// the format of which are:
+//
+//   movie id, user id, rating (1..5), date (YYYY-MM-DD)
+//
+// The output are the top 10 users who reviewed the most movies, in 
+// descending order (so the user with the most reviews is listed 
+// first).
+//
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
+using System.Threading;
 
-namespace _08___Netflix_MapReduce
+namespace top10
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
+            //
+            // Process cmd-line args, welcome msg:
+            //
             string infile = AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..\ratings.txt";
-            //string[] readText = File.ReadAllLines(infile);
-            int count = 0;
-            Stopwatch tiempo = new Stopwatch();
-            Dictionary<int, int> ReviewsByUser = new Dictionary<int, int>(999999);
 
+            // 
+            // Foreach record, parse and aggregate the pairs <userid, num reviews>:
+            //
+            sw.Restart();
 
-            tiempo.Start();
-
-            string[] archivo = File.ReadAllLines(infile);
+            Dictionary<int, int> ReviewsByUser = new Dictionary<int, int>();
 
             Parallel.ForEach(
-                archivo, // Datasource
+                File.ReadLines(infile), // 1: Origen de datos
 
-                () => 0, // Initilizer
+                () => { return new Dictionary<int, int>(); }, // 2: Inicializar almacen de datos local (tls)
 
-                (linea, loopState, tls) => //Task body
-                {                   
-                    int userid = parse(linea);
+                (line, loopState, tls) => // 2: Cuerpo de la tarea
+                {
+                    int userid = parse(line);
 
-                    if (!ReviewsByUser.ContainsKey(userid))  // primera revisión:
-                        ReviewsByUser.Add(userid, 1);
+                    if (!tls.ContainsKey(userid))  // primera revisión:
+                        tls.Add(userid, 1);
                     else  // otra revisión por el mismo usuario:
-                        ReviewsByUser[userid]++;           
+                        tls[userid]++;
 
                     return tls;
                 },
-                (tls) => //Finalizer
-                {                    
-                    Interlocked.Add(ref count, tls);
-                }
-            );            
+                (tls) => //4: Finalizer - Reduce
+                {
+                    lock (ReviewsByUser)
+                    {
+                        foreach (int userid in tls.Keys)
+                        {
+                            int cantVotos = tls[userid];
 
+                            if (!ReviewsByUser.ContainsKey(userid))
+                                ReviewsByUser.Add(userid, cantVotos);
+                            else
+                                ReviewsByUser[userid] += cantVotos;
+                        }
+                    }
+                }
+            );
+
+            //
+            // Sort pairs by num reviews, descending order, and take top 10:
+            //
             var top10 = ReviewsByUser.OrderByDescending(x => x.Value).Take(10);
 
-            tiempo.Stop();
+            long timems = sw.ElapsedMilliseconds;
 
-            // Resultados:          
+            //
+            // Write out the results:
+            //
             Console.WriteLine();
             Console.WriteLine("** Top 10 users reviewing movies:");
 
             foreach (var user in top10)
                 Console.WriteLine("{0}: {1}", user.Key, user.Value);
 
+            // 
+            // Done:
+            //
+            double time = timems / 1000.0;  // convert milliseconds to secs
+
+            Console.WriteLine();
+            Console.WriteLine("** Done! Time: {0:0.000} secs", time);
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("El tiempo que tardo es: " + tiempo.ElapsedMilliseconds / 1000.0 + " segundos");
+            Console.WriteLine();
+
+            Console.Write("Press a key to exit...");
             Console.ReadKey();
         }
 
+
+        /// <summary>
+        /// Parses one line of the netflix data file, and returns the userid who reviewed the movie.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         private static int parse(string line)
         {
             char[] separators = { ',' };
@@ -76,5 +125,6 @@ namespace _08___Netflix_MapReduce
 
             return userid;
         }
-    }
-}
+
+    }//class
+}//namespace
