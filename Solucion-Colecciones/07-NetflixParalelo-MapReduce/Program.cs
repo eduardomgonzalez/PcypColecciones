@@ -43,7 +43,7 @@ namespace _08___Netflix_MapReduce
 
                     return tls;
                 },
-                (tls) => //4: Finalizer - Reduce
+                (tls) => //4: Finalizador - Reducir
                 {
                     lock (ReviewsByUser)
                     {
