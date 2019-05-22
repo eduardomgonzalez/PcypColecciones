@@ -13,56 +13,90 @@ namespace _08___Netflix_MapReduce
     {
         static void Main(string[] args)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
+            //
+            // Procesar argd-line args, bienvenido msg:
+            //
             string infile = AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..\ratings.txt";
-            //string[] readText = File.ReadAllLines(infile);
-            int count = 0;
-            Stopwatch tiempo = new Stopwatch();
-            Dictionary<int, int> ReviewsByUser = new Dictionary<int, int>(999999);
 
+            // 
+            // Para cada registro, analice y agregue los pares <userid, num reviews>:
+            //
+            sw.Restart();
 
-            tiempo.Start();
-
-            string[] archivo = File.ReadAllLines(infile);
+            Dictionary<int, int> ReviewsByUser = new Dictionary<int, int>();
 
             Parallel.ForEach(
-                archivo, // Datasource
+                File.ReadLines(infile), // 1: Origen de datos
 
-                () => 0, // Initilizer
+                () => { return new Dictionary<int, int>(); }, // 2: Inicializar almacen de datos local (tls)
 
-                (linea, loopState, tls) => //Task body
-                {                   
-                    int userid = parse(linea);
+                (line, loopState, tls) => // 2: Cuerpo de la tarea
+                {
+                    int userid = parse(line);
 
-                    if (!ReviewsByUser.ContainsKey(userid))  // primera revisión:
-                        ReviewsByUser.Add(userid, 1);
+                    if (!tls.ContainsKey(userid))  // primera revisión:
+                        tls.Add(userid, 1);
                     else  // otra revisión por el mismo usuario:
-                        ReviewsByUser[userid]++;           
+                        tls[userid]++;
 
                     return tls;
                 },
-                (tls) => //Finalizer
-                {                    
-                    Interlocked.Add(ref count, tls);
-                }
-            );            
+                (tls) => //4: Finalizer - Reduce
+                {
+                    lock (ReviewsByUser)
+                    {
+                        foreach (int userid in tls.Keys)
+                        {
+                            int cantVotos = tls[userid];
 
+                            if (!ReviewsByUser.ContainsKey(userid))
+                                ReviewsByUser.Add(userid, cantVotos);
+                            else
+                                ReviewsByUser[userid] += cantVotos;
+                        }
+                    }
+                }
+            );
+
+            //
+            // Ordena los pares por número de comentarios, orden descendente, y toma el top 10:
+            //
             var top10 = ReviewsByUser.OrderByDescending(x => x.Value).Take(10);
 
-            tiempo.Stop();
+            long timems = sw.ElapsedMilliseconds;
 
-            // Resultados:          
+            //
+            // Escribe los resultados:
+            //
             Console.WriteLine();
             Console.WriteLine("** Top 10 users reviewing movies:");
 
             foreach (var user in top10)
                 Console.WriteLine("{0}: {1}", user.Key, user.Value);
 
+            // 
+            // Hecho:
+            //
+            double time = timems / 1000.0;  // convertir milisegundos a segundos
+
+            Console.WriteLine();
+            Console.WriteLine("** Done! Time: {0:0.000} secs", time);
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("El tiempo que tardo es: " + tiempo.ElapsedMilliseconds / 1000.0 + " segundos");
+            Console.WriteLine();
+
+            Console.Write("Press a key to exit...");
             Console.ReadKey();
         }
 
+
+        /// <summary>
+        /// Analiza una línea del archivo de datos de netflix y devuelve el ID de usuario que revisó la película.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         private static int parse(string line)
         {
             char[] separators = { ',' };
