@@ -1,27 +1,42 @@
-﻿using System;
+﻿/* Program.cs */
+
+//
+// Sequential C# Version
+//
+// Sequentially processes a text file of movie reviews, one per line, 
+// the format of which are:
+//
+//   movie id, user id, rating (1..5), date (YYYY-MM-DD)
+//
+// The output are the top 10 users who reviewed the most movies, in 
+// descending order (so the user with the most reviews is listed 
+// first).
+//
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
+using System.Threading;
 
-namespace _08___Netflix_MapReduce
+namespace top10
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
             //
-            // Procesar argd-line args, bienvenido msg:
+            // Process cmd-line args, welcome msg:
             //
             string infile = AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..\ratings.txt";
 
             // 
-            // Para cada registro, analice y agregue los pares <userid, num reviews>:
+            // Foreach record, parse and aggregate the pairs <userid, num reviews>:
             //
             sw.Restart();
 
@@ -61,14 +76,14 @@ namespace _08___Netflix_MapReduce
             );
 
             //
-            // Ordena los pares por número de comentarios, orden descendente, y toma el top 10:
+            // Sort pairs by num reviews, descending order, and take top 10:
             //
             var top10 = ReviewsByUser.OrderByDescending(x => x.Value).Take(10);
 
             long timems = sw.ElapsedMilliseconds;
 
             //
-            // Escribe los resultados:
+            // Write out the results:
             //
             Console.WriteLine();
             Console.WriteLine("** Top 10 users reviewing movies:");
@@ -77,9 +92,9 @@ namespace _08___Netflix_MapReduce
                 Console.WriteLine("{0}: {1}", user.Key, user.Value);
 
             // 
-            // Hecho:
+            // Done:
             //
-            double time = timems / 1000.0;  // convertir milisegundos a segundos
+            double time = timems / 1000.0;  // convert milliseconds to secs
 
             Console.WriteLine();
             Console.WriteLine("** Done! Time: {0:0.000} secs", time);
@@ -93,7 +108,7 @@ namespace _08___Netflix_MapReduce
 
 
         /// <summary>
-        /// Analiza una línea del archivo de datos de netflix y devuelve el ID de usuario que revisó la película.
+        /// Parses one line of the netflix data file, and returns the userid who reviewed the movie.
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>
@@ -110,5 +125,6 @@ namespace _08___Netflix_MapReduce
 
             return userid;
         }
-    }
-}
+
+    }//class
+}//namespace
